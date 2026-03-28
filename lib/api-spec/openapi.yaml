@@ -1,22 +1,26 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: DZ Cars - Algeria Vehicle Listings API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: listings
+    description: Car listing operations
+  - name: brands
+    description: Car brand operations
+  - name: wilayas
+    description: Algerian wilayas
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +28,219 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /listings:
+    get:
+      operationId: getListings
+      tags: [listings]
+      summary: Get all car listings with optional filters
+      parameters:
+        - name: brand
+          in: query
+          schema:
+            type: string
+        - name: model
+          in: query
+          schema:
+            type: string
+        - name: yearMin
+          in: query
+          schema:
+            type: number
+        - name: yearMax
+          in: query
+          schema:
+            type: number
+        - name: priceMin
+          in: query
+          schema:
+            type: number
+        - name: priceMax
+          in: query
+          schema:
+            type: number
+        - name: wilaya
+          in: query
+          schema:
+            type: string
+        - name: fuelType
+          in: query
+          schema:
+            type: string
+        - name: transmission
+          in: query
+          schema:
+            type: string
+        - name: condition
+          in: query
+          schema:
+            type: string
+        - name: mileageMax
+          in: query
+          schema:
+            type: number
+        - name: page
+          in: query
+          schema:
+            type: number
+        - name: limit
+          in: query
+          schema:
+            type: number
+        - name: sort
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of car listings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListingsResponse"
+    post:
+      operationId: createListing
+      tags: [listings]
+      summary: Create a new car listing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateListingInput"
+      responses:
+        "201":
+          description: Listing created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+
+  /listings/featured:
+    get:
+      operationId: getFeaturedListings
+      tags: [listings]
+      summary: Get featured car listings
+      responses:
+        "200":
+          description: Featured car listings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Listing"
+
+  /listings/{id}:
+    get:
+      operationId: getListingById
+      tags: [listings]
+      summary: Get a single listing by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Car listing detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+        "404":
+          description: Not found
+
+  /listings/{id}/similar:
+    get:
+      operationId: getSimilarListings
+      tags: [listings]
+      summary: Get similar listings
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Similar listings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Listing"
+
+  /brands:
+    get:
+      operationId: getBrands
+      tags: [brands]
+      summary: Get all car brands with listing counts
+      responses:
+        "200":
+          description: Car brands
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Brand"
+
+  /brands/{slug}/models:
+    get:
+      operationId: getBrandModels
+      tags: [brands]
+      summary: Get models for a brand
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Models for brand
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+  /wilayas:
+    get:
+      operationId: getWilayas
+      tags: [wilayas]
+      summary: Get all Algerian wilayas with listing counts
+      responses:
+        "200":
+          description: Wilayas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Wilaya"
+
+  /stats:
+    get:
+      operationId: getStats
+      tags: [listings]
+      summary: Get platform statistics
+      responses:
+        "200":
+          description: Platform statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Stats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +251,231 @@ components:
       required:
         - status
 
+    Listing:
+      type: object
+      properties:
+        id:
+          type: number
+        title:
+          type: string
+        brand:
+          type: string
+        model:
+          type: string
+        year:
+          type: number
+        price:
+          type: number
+        mileage:
+          type: number
+        fuelType:
+          type: string
+        transmission:
+          type: string
+        condition:
+          type: string
+        wilaya:
+          type: string
+        city:
+          type: string
+        description:
+          type: string
+        color:
+          type: string
+        doors:
+          type: number
+        seats:
+          type: number
+        power:
+          type: number
+        engineSize:
+          type: string
+        features:
+          type: array
+          items:
+            type: string
+        images:
+          type: array
+          items:
+            type: string
+        sellerName:
+          type: string
+        sellerPhone:
+          type: string
+        sellerType:
+          type: string
+        isFeatured:
+          type: boolean
+        views:
+          type: number
+        createdAt:
+          type: string
+      required:
+        - id
+        - title
+        - brand
+        - model
+        - year
+        - price
+        - mileage
+        - fuelType
+        - transmission
+        - condition
+        - wilaya
+        - city
+        - description
+        - color
+        - doors
+        - seats
+        - images
+        - sellerName
+        - sellerPhone
+        - sellerType
+        - isFeatured
+        - views
+        - createdAt
+
+    CreateListingInput:
+      type: object
+      properties:
+        title:
+          type: string
+        brand:
+          type: string
+        model:
+          type: string
+        year:
+          type: number
+        price:
+          type: number
+        mileage:
+          type: number
+        fuelType:
+          type: string
+        transmission:
+          type: string
+        condition:
+          type: string
+        wilaya:
+          type: string
+        city:
+          type: string
+        description:
+          type: string
+        color:
+          type: string
+        doors:
+          type: number
+        seats:
+          type: number
+        power:
+          type: number
+        engineSize:
+          type: string
+        features:
+          type: array
+          items:
+            type: string
+        images:
+          type: array
+          items:
+            type: string
+        sellerName:
+          type: string
+        sellerPhone:
+          type: string
+        sellerType:
+          type: string
+      required:
+        - title
+        - brand
+        - model
+        - year
+        - price
+        - mileage
+        - fuelType
+        - transmission
+        - condition
+        - wilaya
+        - city
+        - description
+        - color
+        - doors
+        - seats
+        - sellerName
+        - sellerPhone
+        - sellerType
+
+    ListingsResponse:
+      type: object
+      properties:
+        listings:
+          type: array
+          items:
+            $ref: "#/components/schemas/Listing"
+        total:
+          type: number
+        page:
+          type: number
+        limit:
+          type: number
+        totalPages:
+          type: number
+      required:
+        - listings
+        - total
+        - page
+        - limit
+        - totalPages
+
+    Brand:
+      type: object
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        count:
+          type: number
+        logo:
+          type: string
+        country:
+          type: string
+      required:
+        - name
+        - slug
+        - count
+
+    Wilaya:
+      type: object
+      properties:
+        code:
+          type: number
+        name:
+          type: string
+        nameAr:
+          type: string
+        count:
+          type: number
+      required:
+        - code
+        - name
+        - nameAr
+        - count
+
+    Stats:
+      type: object
+      properties:
+        totalListings:
+          type: number
+        totalBrands:
+          type: number
+        totalWilayas:
+          type: number
+        newThisWeek:
+          type: number
+      required:
+        - totalListings
+        - totalBrands
+        - totalWilayas
+        - newThisWeek
