@@ -1,0 +1,21 @@
+{
+  "name": "DZ Cars",
+  "short_name": "DZ Cars",
+  "description": "Find your perfect car in Algeria. Browse thousands of new and used vehicle listings, compare prices, and connect with sellers. Algeria's leading auto marketplace for cars, trucks, and motorcycles.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1E40AF",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/apple-touch-icon.svg",
+      "sizes": "180x180",
+      "type": "image/svg+xml"
+    }
+  ]
+}
