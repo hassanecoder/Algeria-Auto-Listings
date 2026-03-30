@@ -117,8 +117,8 @@ export const MOCK_LISTINGS: Listing[] = [
     engineSize: "1.6 CRDi",
     features: ["Cuir", "Sièges électriques", "Hayon électrique", "Apple CarPlay", "Régulateur de vitesse"],
     images: [
-      "https://images.unsplash.com/photo-1633501258671-5fa580ea5098?w=800&q=80",
-      "https://images.unsplash.com/photo-1633501258957-c3db11de6e75?w=800&q=80"
+      "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&q=80",
+      "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80"
     ],
     sellerName: "Karim",
     sellerPhone: "+213 661 22 33 44",
